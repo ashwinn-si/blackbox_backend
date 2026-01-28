@@ -11,6 +11,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import java.sql.Date;
+import java.util.List;
 
 
 @Entity(name = "issues")
@@ -34,6 +35,10 @@ public class Issue {
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb", name = "issue_text", nullable = false)
     private JsonNode issueText;
+
+    //keep as 0 and we dont need it
+    @Column(nullable = false)
+    private List<String> images;
 
     @Column(name = "issue_content", nullable = false)
     private String issueContent;

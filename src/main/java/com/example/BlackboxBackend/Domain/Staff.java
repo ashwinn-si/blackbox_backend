@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity(name = "staffs")
 @Getter
 @Setter
@@ -29,4 +32,7 @@ public class Staff {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private RoleEnum role;
+
+    @Column(nullable = false)
+    private List<Department> permittedDepartment = new ArrayList<>();
 }
