@@ -11,51 +11,51 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
-
-@Entity(name = "issues")
+@Entity
+@Table(name = "issues")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Issue {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_id")
-    private Department department;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "department_id")
+  private Department department;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "resolved_id")
-    private Staff staff;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "resolved_id")
+  private Staff staff;
 
-    @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb", name = "issue_text", nullable = false)
-    private JsonNode issueText;
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb", name = "issue_text", nullable = false)
+  private JsonNode issueText;
 
-    //keep as 0 and we dont need it
-    @Column(nullable = false)
-    private List<String> images;
+  @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+  private List<Image> images = new ArrayList<>();
 
-    @Column(name = "issue_content", nullable = false)
-    private String issueContent;
+  @Column(name = "issue_content", nullable = false)
+  private String issueContent;
 
-    @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb", name = "resolution_text", nullable = true)
-    private JsonNode resolutionText;
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb", name = "resolution_text", nullable = true)
+  private JsonNode resolutionText;
 
-    @Column(name = "resolution_content", nullable = true)
-    private String resolutionContent;
+  @Column(name = "resolution_content", nullable = true)
+  private String resolutionContent;
 
-    @Enumerated(value = EnumType.STRING)
-    private IssueStatusEnum status;
+  @Enumerated(value = EnumType.STRING)
+  private IssueStatusEnum status;
 
-    @Column(nullable = false)
-    private Date createdAt;
+  @Column(nullable = false)
+  private Date createdAt;
 
-    @Column(nullable = true)
-    private Date resolvedAt;
+  @Column(nullable = true)
+  private Date resolvedAt;
 }

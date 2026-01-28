@@ -6,23 +6,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Entity(name = "departments")
+@Entity
+@Table(name = "issue_images")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table
-public class Department {
+public class Image {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
-  @Column(nullable = false, unique = true)
-  private String name;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "issue_id", nullable = false)
+  private Issue issue;
 
-  @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
-  private List<Issue> issueList = new ArrayList<>();
+  @Column(nullable = false)
+  private String imagePath;
 }

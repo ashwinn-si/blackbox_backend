@@ -10,29 +10,35 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "staffs")
+@Entity
+@Table(name = "staffs")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Staff {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String message;
+  @Column(nullable = false, unique = true)
+  private String email;
 
-    @Column(nullable = false)
-    private String password;
+  @Column(nullable = false)
+  private String password;
 
-    @Column(columnDefinition = "true")
-    private boolean isSuperAdmin;
+  @Column(columnDefinition = "false")
+  private boolean isSuperAdmin;
 
-    @Column(nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private RoleEnum role;
+  @Column(nullable = false)
+  @Enumerated(value = EnumType.STRING)
+  private RoleEnum role;
 
-    @Column(nullable = false)
-    private List<Department> permittedDepartment = new ArrayList<>();
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(name = "staff_department_mapping", joinColumns = @JoinColumn(name = "staff_id"), inverseJoinColumns = @JoinColumn(name = "department_id"))
+  private List<Department> permittedDepartments = new ArrayList<>();
+
+  @OneToMany(mappedBy = "staff", fetch = FetchType.LAZY)
+  private List<Issue> resolvedIssues = new ArrayList<>();
+
 }
