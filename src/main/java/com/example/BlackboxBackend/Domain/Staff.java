@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "staffs")
+@Table
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,13 +22,16 @@ public class Staff {
   private Long id;
 
   @Column(nullable = false, unique = true)
-  private String email;
+  private String username;
 
   @Column(nullable = false)
   private String password;
 
-  @Column(columnDefinition = "false")
-  private boolean isSuperAdmin;
+  @Column(nullable = false)
+  private String name;
+
+  @Column(nullable = false)
+  private boolean isSuperAdmin = false;
 
   @Column(nullable = false)
   @Enumerated(value = EnumType.STRING)

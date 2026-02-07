@@ -11,6 +11,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleMethodArugmentInvalidException(Exception ex){
         return ResponseHandler.handleResponse(HttpStatus.CONFLICT, null, ex.getMessage());

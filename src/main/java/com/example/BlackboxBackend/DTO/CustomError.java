@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public class CustomError extends Exception{
     private HttpStatus httpStatus;
-    CustomError(HttpStatus httpStatus, String message){
+    public CustomError(HttpStatus httpStatus, String message){
         super(message);
         this.httpStatus = httpStatus;
     }

@@ -9,7 +9,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "departments")
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,4 +25,7 @@ public class Department {
 
   @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
   private List<Issue> issueList = new ArrayList<>();
+
+  @ManyToMany(mappedBy = "permittedDepartments", fetch = FetchType.LAZY)
+  private List<Staff> staffMembers = new ArrayList<>();
 }

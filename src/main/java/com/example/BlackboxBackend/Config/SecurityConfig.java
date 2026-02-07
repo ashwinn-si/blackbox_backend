@@ -1,13 +1,30 @@
 package com.example.BlackboxBackend.Config;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+@Configuration
+@EnableWebSecurity
 public class SecurityConfig {
-    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity){
-        httpSecurity
-                .csrf((csrf) -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
-        return httpSecurity.build();
-    }
+  // TODO need to import from the env later
+  private int SALT_VALUE = 12;
+
+  @Bean
+  PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder(SALT_VALUE);
+  }
+
+  @Bean
+  SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    httpSecurity
+        .csrf((csrf) -> csrf.disable())
+        .authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**").permitAll()
+            .anyRequest().authenticated());
+    return httpSecurity.build();
+  }
 }
