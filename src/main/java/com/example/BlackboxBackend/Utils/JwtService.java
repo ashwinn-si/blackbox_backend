@@ -21,11 +21,11 @@ public class JwtService {
         claims.put("isSuperAdmin", isSuperAdmin);
 
         return Jwts.builder()
-                .signWith(SignatureAlgorithm.HS256, jwtSecret)
-                .setSubject(String.valueOf(userId))
-                .setClaims(claims)
+                .setClaims(claims) // Set the map first
+                .setSubject(String.valueOf(userId)) // Then add specific fields
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationTime))
+                .signWith(SignatureAlgorithm.HS256, jwtSecret)
                 .compact();
     }
 
@@ -33,11 +33,12 @@ public class JwtService {
         try{
             Jwts.parser()
                     .setSigningKey(jwtSecret)
-                    .parseClaimsJwt(token)
+                    .parseClaimsJws(token)
                     .getBody();
 
             return true;
         }catch (Exception e){
+            System.out.println("ERROR IN THE JWT VALID TOKEN - "+ e.getMessage() );
             return false;
         }
     }
@@ -45,7 +46,7 @@ public class JwtService {
     public Claims getClaims(String token){
         return Jwts.parser()
                 .setSigningKey(jwtSecret)
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody();
     }
 }

@@ -44,4 +44,11 @@ public class Staff {
   @OneToMany(mappedBy = "staff", fetch = FetchType.LAZY)
   private List<Issue> resolvedIssues = new ArrayList<>();
 
+  public Staff(String username, String password, String name, boolean isSuperAdmin, RoleEnum role) {
+    this.username = username;
+    this.password = password;
+    this.name = name;
+    this.isSuperAdmin = isSuperAdmin;
+    this.role = role;
+  }
 }

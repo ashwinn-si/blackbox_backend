@@ -1,6 +1,7 @@
 package com.example.BlackboxBackend.Config;
 
 import com.example.BlackboxBackend.DTO.JwtDTO;
+import com.example.BlackboxBackend.DTO.RoleEnum;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,5 +29,17 @@ public class PermissionHandler extends OncePerRequestFilter {
         Authentication authentication = securityContextHolder.getAuthentication();
         JwtDTO jwtDTO = (JwtDTO) authentication.getPrincipal();
 
+        if(jwtDTO.isSuperAdmin()){
+            filterChain.doFilter(request, response);
+        }
+
+        if(url.contains("/department")){
+            if(jwtDTO.getRole() == RoleEnum.SUPER_ADMIN){
+                filterChain.doFilter(request, response);
+            }else{
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+        }
     }
 }

@@ -20,12 +20,20 @@ public class Department {
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
-  @Column(nullable = false, unique = true)
+  @Column(nullable = false)
   private String name;
+
+  @Column(nullable = false)
+  private Boolean isDeleted = false;
 
   @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
   private List<Issue> issueList = new ArrayList<>();
 
   @ManyToMany(mappedBy = "permittedDepartments", fetch = FetchType.LAZY)
   private List<Staff> staffMembers = new ArrayList<>();
+
+
+  public Department(String name) {
+    this.name = name;
+  }
 }

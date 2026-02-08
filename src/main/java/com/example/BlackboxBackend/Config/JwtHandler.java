@@ -35,6 +35,7 @@ public class JwtHandler extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
       return;
     }
+
     String header = request.getHeader("Authorization");
 
     if (header == null || !header.contains("Bearer ")) {
@@ -55,6 +56,8 @@ public class JwtHandler extends OncePerRequestFilter {
     RoleEnum role = claims.get("role", RoleEnum.class);
     boolean isSuperAdmin = claims.get("isSuperAdmin", Boolean.class);
     JwtDTO jwtDTO = new JwtDTO(userId, role, isSuperAdmin);
+
+
     String roleName = "ROLE_" + role;
     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
         jwtDTO,
