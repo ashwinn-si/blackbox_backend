@@ -121,9 +121,9 @@ public class StaffController {
                                               @RequestParam(required = false) @Size(min =1, message ="Atleast One Department Needed" ) List<Long> departmentIdList) throws CustomError {
         if(departmentIdList != null && !departmentIdList.isEmpty()){
             if(!staffService.isAllowedToViewStaff(jwtDTO.getUserId(), departmentIdList)){
-                return ResponseHandler.handleResponse(HttpStatus.UNAUTHORIZED,
+                return ResponseHandler.handleResponse(HttpStatus.CONFLICT,
                         null,
-                        "UNAUTHERIZED ACCESS");
+                        "NOT PERMITTED");
             }
         }
         return ResponseHandler.handleResponse(HttpStatus.OK, staffService.getAllStaff(page, size, departmentIdList), "All Staff Details");

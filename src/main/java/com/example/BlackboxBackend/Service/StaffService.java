@@ -82,8 +82,10 @@ public class StaffService {
         Staff creatorDetails = isStaffExists(creatorId);
 
         if(creatorDetails.isSuperAdmin()){
-            return true;
+            List<Department> superAdminAllowedDeparments = departmentRepository.findByIsDeletedFalse();
+            creatorDetails.setPermittedDepartments(superAdminAllowedDeparments);
         }
+
 
         HashSet<Long> allowedDepartment = new HashSet<>();
 
