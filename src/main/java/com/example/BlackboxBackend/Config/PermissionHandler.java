@@ -41,5 +41,13 @@ public class PermissionHandler extends OncePerRequestFilter {
                 return;
             }
         }
+        if(url.contains("/staff")){
+            if(jwtDTO.getRole() == RoleEnum.SUPER_ADMIN || jwtDTO.getRole() == RoleEnum.ADMIN){
+                filterChain.doFilter(request, response);
+            }else{
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+        }
     }
 }
