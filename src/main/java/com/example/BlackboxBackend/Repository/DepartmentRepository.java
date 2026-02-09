@@ -6,10 +6,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Long> {
+
+    public List<Department> findByIsDeletedFalse();
 
     public Optional<Department> findByNameAndIsDeletedFalse(String name);
 

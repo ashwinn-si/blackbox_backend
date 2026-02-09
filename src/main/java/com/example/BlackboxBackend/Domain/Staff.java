@@ -51,4 +51,12 @@ public class Staff {
     this.isSuperAdmin = isSuperAdmin;
     this.role = role;
   }
+  public Staff(String username, String password, String name, boolean isSuperAdmin, RoleEnum role, List<Department> departments) {
+    this.username = username;
+    this.password = password;
+    this.name = name;
+    this.isSuperAdmin = isSuperAdmin;
+    this.role = role;
+    this.permittedDepartments = departments;
+  }
 }

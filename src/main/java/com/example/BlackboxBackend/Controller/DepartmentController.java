@@ -63,7 +63,7 @@ public class DepartmentController {
     @GetMapping("/admin/get-all")
     public ResponseEntity<?> getAllDepartment(@RequestParam @NotNull(message = "Page is Required") @Min(value = 1, message = "Page is min of 1") Integer page,
                                               @RequestParam @NotNull(message = "Size is Required") @Min(value = 1, message = "Size is min of 1") Integer size,
-                                              @RequestParam @Nullable String departmentName){
+                                              @RequestParam(required = false) @Size(min = 0, message = "Department Name is Required") String departmentName){
         return ResponseHandler.handleResponse(
                 HttpStatus.OK,
                 departmentService.getAllDepartment(page, size, departmentName),
