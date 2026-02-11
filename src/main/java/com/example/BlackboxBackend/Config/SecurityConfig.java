@@ -10,6 +10,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -33,11 +36,24 @@ public class SecurityConfig {
   SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
         .csrf((csrf) -> csrf.disable())
-        .authorizeHttpRequests(auth ->
-                auth.requestMatchers("/api/*/admin/**").authenticated()
+        .authorizeHttpRequests(auth -> auth.requestMatchers("/api/*/admin/**").authenticated()
             .anyRequest().permitAll())
-            .addFilterBefore(jwtHandler, UsernamePasswordAuthenticationFilter.class)
-            .addFilterAfter(permissionHandler, UsernamePasswordAuthenticationFilter.class);
+        .addFilterBefore(jwtHandler, UsernamePasswordAuthenticationFilter.class)
+        .addFilterAfter(permissionHandler, UsernamePasswordAuthenticationFilter.class);
     return httpSecurity.build();
   }
+  
+  @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:5173");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
 }

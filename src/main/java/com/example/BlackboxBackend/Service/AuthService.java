@@ -69,7 +69,7 @@ public class AuthService {
         }else{
             permittedDepartment = staff.getPermittedDepartments();
         }
-        
+
         for(Department departments: permittedDepartment){
             departmentsList.add(new StaffDTO.Departments(departments.getId(), departments.getName()));
         }

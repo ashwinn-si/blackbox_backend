@@ -1,0 +1,252 @@
+# API Documentation
+
+  ## POST /api/auth/login
+  - Description: Login with username and password.
+  - Request Example (JSON):
+
+  ```json
+  {
+    "username": "admin",
+    "password": "root"
+  }
+  ```
+
+  - Successful Response Example (HTTP 200):
+
+  ```json
+  {
+    "message": "Login Successfull",
+    "data": {
+      "username": "admin",
+      "name": "developer",
+      "token": "<jwt-token-string>",
+      "allowedDepartments": [
+        { "key": 1, "value": "IT" },
+        { "key": 2, "value": "Accounts" }
+      ],
+      "screens": ["/main-dashboard","/department","/issue","/staff","/department-dashboard"]
+    },
+    "httpStatus": "OK"
+  }
+  ```
+
+  Note: the JWT token string is a signed token. If you only need the JWT payload structure, see the Jwt payload example below.
+
+  ### Jwt payload (claims) example
+  ```json
+  {
+    "userId": 1,
+    "isSuperAdmin": true
+  }
+  ```
+
+  ---
+
+  ## POST /api/department/admin/add
+  - Description: Create a new department.
+  - Request Example:
+
+  ```json
+  {
+    "departmentName": "Human Resources"
+  }
+  ```
+
+  - Response Example (HTTP 200):
+
+  ```json
+  {
+    "message": "Department Created",
+    "data": null,
+    "httpStatus": "OK"
+  }
+  ```
+
+  ## PUT /api/department/admin/update/{id}
+  - Description: Update a department by ID.
+  - Path param: replace `{id}` with department id (e.g., `/admin/update/3`).
+  - Request Example:
+
+  ```json
+  {
+    "departmentName": "Finance"
+  }
+  ```
+
+  - Response Example (HTTP 200):
+
+  ```json
+  {
+    "message": "Department Updated",
+    "data": null,
+    "httpStatus": "OK"
+  }
+  ```
+
+  ## DELETE /api/department/admin/delete/{id}
+  - Description: Soft-delete a department by ID.
+  - Response Example (HTTP 200):
+
+  ```json
+  {
+    "message": "Department Deleted",
+    "data": null,
+    "httpStatus": "OK"
+  }
+  ```
+
+  ## GET /api/department/admin/get-all?page=1&size=10&departmentName=opt
+  - Description: List departments (paginated). `departmentName` is optional and used for filtering.
+  - Query params:
+    - `page` (integer, required)
+    - `size` (integer, required)
+    - `departmentName` (string, optional)
+  - Response Example (HTTP 200) — paginated wrapper:
+
+  ```json
+  {
+    "message": "All Departments",
+    "data": {
+      "data": [
+        { "departmentName": "IT", "id": 1, "noStaff": 5, "issuesCount": 12 },
+        { "departmentName": "Accounts", "id": 2, "noStaff": 3, "issuesCount": 4 }
+      ],
+      "currPage": 1,
+      "size": 10,
+      "totalPages": 1
+    },
+    "httpStatus": "OK"
+  }
+  ```
+
+  ## GET /api/department/admin/get/{id}
+  - Description: Get a single department's details.
+  - Response Example (HTTP 200):
+
+  ```json
+  {
+    "message": "Department Details",
+    "data": {
+      "departmentName": "IT",
+      "id": 1,
+      "noStaff": 5,
+      "issuesCount": 12
+    },
+    "httpStatus": "OK"
+  }
+  ```
+
+  ---
+
+  ## POST /api/staff/admin/add
+  - Description: Create a new staff member.
+  - Request Example (JSON):
+
+  ```json
+  {
+    "username": "jdoe",
+    "password": "secret123",
+    "name": "John Doe",
+    "role": "ADMIN",    
+    "isSuperAdmin": false,
+    "departmentAssignTo": [1, 2]
+  }
+  ```
+
+  - Successful Response Example (HTTP 201):
+
+  ```json
+  {
+    "message": "Staff Created",
+    "data": null,
+    "httpStatus": "CREATED"
+  }
+  ```
+
+  ## PUT /api/staff/admin/update-password/{id}
+  - Description: Change a staff member's password.
+  - Request Example:
+
+  ```json
+  {
+    "password": "newPassword123"
+  }
+  ```
+
+  - Response Example (HTTP 200):
+
+  ```json
+  {
+    "message": "Password Changed Successfully",
+    "data": null,
+    "httpStatus": "OK"
+  }
+  ```
+
+  ## PUT /api/staff/admin/update-department/{id}
+  - Description: Update the departments assigned to a staff member.
+  - Request Example:
+
+  ```json
+  {
+    "departmentAssignTo": [2, 3]
+  }
+  ```
+
+  - Response Example (HTTP 200):
+
+  ```json
+  {
+    "message": "Departments Updated Successfully",
+    "data": null,
+    "httpStatus": "OK"
+  }
+  ```
+
+  ## GET /api/staff/admin/get/{id}
+  - Description: Get staff details by ID.
+  - Response Example (HTTP 200):
+
+  ```json
+  {
+    "message": "Staff Details",
+    "data": {
+      "id": 10,
+      "username": "jdoe",
+      "name": "John Doe",
+      "allowedDepartments": [
+        { "key": 1, "value": "IT" },
+        { "key": 2, "value": "Accounts" }
+      ]
+    },
+    "httpStatus": "OK"
+  }
+  ```
+
+  ## GET /api/staff/admin/get-all?page=1&size=10&departmentIdList=1,2
+  - Description: List staff (paginated). `departmentIdList` is optional and filters by department ids.
+  - Query params:
+    - `page` (integer, required)
+    - `size` (integer, required)
+    - `departmentIdList` (array of integers, optional)
+  - Response Example (HTTP 200):
+
+  ```json
+  {
+    "message": "All Staff Details",
+    "data": {
+      "data": [
+        { "id": 10, "username": "jdoe", "name": "John Doe", "noSolvedIssues": 4, "noAssignedDepartments": 2 },
+        { "id": 11, "username": "asmith", "name": "Alice Smith", "noSolvedIssues": 7, "noAssignedDepartments": 1 }
+      ],
+      "currPage": 1,
+      "size": 10,
+      "totalPages": 1
+    },
+    "httpStatus": "OK"
+  }
+  ```
+
+  ---
+
+  If you want additional examples (error responses, validation examples, or example JWT tokens), tell me which endpoints to expand.
