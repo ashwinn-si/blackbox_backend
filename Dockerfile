@@ -1,18 +1,19 @@
-# --------- Build Stage ---------
-FROM maven:3.9.6-eclipse-temurin-17 AS builder
+# -------- BUILD STAGE --------
+FROM maven:3.9.6-eclipse-temurin-21 AS builder
 
 WORKDIR /build
 
 COPY pom.xml .
-RUN mvn dependency:go-offline
+
+RUN mvn dependency:go-offline -B
 
 COPY src ./src
 
-RUN mvn clean package -DskipTests
+RUN mvn clean package -Dmaven.test.skip=true -B
 
 
-# --------- Run Stage ---------
-FROM eclipse-temurin:17-jre
+# -------- RUN STAGE --------
+FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 

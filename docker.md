@@ -47,3 +47,5 @@ After setting up run
 
 Delete the volume
 ``
+docker-compose down -v
+``
