@@ -43,5 +43,7 @@ After setting up run
 ## OTHER IMPORTANT COMMANDS
 `docker compose down`
 
-`docker compose up -d --build
-`
+`docker compose up -d --build`
+
+Delete the volume
+``
