@@ -1,7 +1,9 @@
 package com.example.BlackboxBackend.Constants;
 
+import com.example.BlackboxBackend.DTO.CustomError;
 import com.example.BlackboxBackend.DTO.RoleEnum;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -53,5 +55,13 @@ public class Constant {
         permissionScreen.put(RoleEnum.SUPER_ADMIN.toString(), superAdminScreens);
         permissionScreen.put(RoleEnum.ADMIN.toString(), adminScreens);
         permissionScreen.put(RoleEnum.WORKER.toString(), workerScreen);
+    }
+
+    static public List<String> getPermissionList(RoleEnum role) throws CustomError {
+        System.out.println(role);
+        if(permissionScreen.get(role.toString()) == null){
+           throw new CustomError(HttpStatus.UNAUTHORIZED, "ROLE NOT FOUND");
+        }
+        return permissionScreen.get(role.toString());
     }
 }

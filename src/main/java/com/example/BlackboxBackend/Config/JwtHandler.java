@@ -36,15 +36,16 @@ public class JwtHandler extends OncePerRequestFilter {
       return;
     }
 
-    String header = request.getHeader("Authorization");
+    String header = request.getHeader("authorization");
 
-    if (header == null || !header.contains("Bearer ")) {
+    if (header == null || !header.startsWith("Bearer ")) {
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }
 
-    String token = header.substring(7);
+    String token = header.replace("Bearer ", "").trim();
 
+    System.out.println(token);
     boolean isValid = jwtService.isValidToken(token);
     if (!isValid) {
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
