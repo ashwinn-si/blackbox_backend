@@ -35,6 +35,7 @@ class StaffDTO{
     private String token;
     private List<Departments> allowedDepartments;
     private List<String> screens;
+    private String role;
 }
 
 @Service
@@ -74,7 +75,7 @@ public class AuthService {
             departmentsList.add(new StaffDTO.Departments(departments.getId(), departments.getName()));
         }
 
-        return new StaffDTO(staff.getUsername(), staff.getName(), token, departmentsList,Constant.permissionScreen.get(staff.getRole().toString()));
+        return new StaffDTO(staff.getUsername(), staff.getName(), token, departmentsList,Constant.permissionScreen.get(staff.getRole().toString()), staff.getRole().toString());
     }
 
 }
