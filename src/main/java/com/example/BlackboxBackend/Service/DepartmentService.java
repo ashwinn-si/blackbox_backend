@@ -26,6 +26,14 @@ class DepartmentDTO {
     Long issuesCount;
 }
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+class DropdownDTO{
+    private Long key;
+    private String value;
+}
+
 @Service
 public class DepartmentService {
     private final DepartmentRepository departmentRepository;
@@ -76,6 +84,14 @@ public class DepartmentService {
         return new GetAllDTO(departmentDTOList, page, size, data.getTotalPages());
     }
 
+    public List<DropdownDTO> getDeparmentDropDown(){
+        List<Department> departments = departmentRepository.findByIsDeletedFalse();
+        List<DropdownDTO> departmentList = new ArrayList<>();
+        for(Department department: departments){
+            departmentList.add(new DropdownDTO(department.getId(), department.getName()));
+        }
+        return departmentList;
+    }
 
     public DepartmentDTO getDepartment(Long departmentId) throws CustomError{
         Department department = isDepartmentExists(departmentId);

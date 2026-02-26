@@ -79,4 +79,13 @@ public class DepartmentController {
                 "Department Details"
         );
     }
+
+    @GetMapping("/get-all-dropdown")
+    public ResponseEntity<?> getDepartmentDropDown() throws CustomError {
+        return ResponseHandler.handleResponse(
+                HttpStatus.OK,
+                departmentService.getDeparmentDropDown(),
+                "Department Details"
+        );
+    }
 }

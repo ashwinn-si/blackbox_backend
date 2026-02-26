@@ -28,23 +28,28 @@ public class Issue {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "resolved_id")
-  private Staff staff;
+  private Staff staff = null;
 
-  @Column(name = "issue", nullable = false)
-  private String issue;
+  @Column(name = "title", nullable = false)
+  private String title;
+
+  @Column(name = "content", nullable = false)
+  private String content;
 
   @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
   private List<Image> images = new ArrayList<>();
+
+  private String audio = "";
 
   @Column(name = "resolution", nullable = true)
   private String resolution;
 
   @Enumerated(value = EnumType.STRING)
-  private IssueStatusEnum status;
+  private IssueStatusEnum status = IssueStatusEnum.CREATED;
 
   @Column(nullable = false)
   private Date createdAt;
 
-  @Column(nullable = true)
-  private Date resolvedAt;
+  @Column
+  private Date resolvedAt = null;
 }
