@@ -4,8 +4,10 @@ import com.example.BlackboxBackend.Constants.Constant;
 import com.example.BlackboxBackend.DTO.CustomError;
 import com.example.BlackboxBackend.DTO.RoleEnum;
 import com.example.BlackboxBackend.Domain.Department;
+import com.example.BlackboxBackend.Domain.Issue;
 import com.example.BlackboxBackend.Domain.Staff;
 import com.example.BlackboxBackend.Repository.DepartmentRepository;
+import com.example.BlackboxBackend.Repository.IssueRepository;
 import com.example.BlackboxBackend.Repository.StaffRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,10 +29,12 @@ class DepartmentDropDownDTO{
 public class PermissionService {
     StaffRepository staffRepository;
     DepartmentRepository departmentRepository;
+    IssueRepository issueRepository;
 
-    PermissionService(StaffRepository staffRepository, DepartmentRepository departmentRepository){
+    PermissionService(StaffRepository staffRepository, DepartmentRepository departmentRepository, IssueRepository issueRepository){
         this.staffRepository = staffRepository;
         this.departmentRepository = departmentRepository;
+        this.issueRepository = issueRepository;
     }
 
     public boolean checkPermissionPage(Long userId, String permission) throws CustomError {
@@ -86,5 +90,39 @@ public class PermissionService {
         }
 
         return departmentsList;
+    }
+
+    public boolean hasPermission(Long issueId, Long departmentId, Long staffId) throws CustomError {
+        if(staffId == null){
+            throw new CustomError(HttpStatus.CONFLICT, "STAFF ID IS REQUIRED");
+        }
+
+        Staff staff = staffRepository.findById(staffId).orElseThrow(() -> {
+            return new CustomError(HttpStatus.NOT_FOUND, "Staff Not Found");
+        });
+
+        if(staff.isSuperAdmin()){
+            return true;
+        }
+        if(issueId == null){
+
+            Department department = departmentRepository.findByIdAndIsDeletedFalse(departmentId).orElseThrow(() -> {
+                return new CustomError(HttpStatus.NOT_FOUND, "Department Not Found");
+            });
+
+            if(staff.getPermittedDepartments().contains(department)){
+                return true;
+            }
+        }else{
+            Issue issue = issueRepository.findById(issueId).orElseThrow(() -> {
+                return new CustomError(HttpStatus.NOT_FOUND, "Issue Not Found");
+            });
+
+            if(staff.getPermittedDepartments().contains(issue.getDepartment())){
+                return true;
+            }
+
+        }
+        return false;
     }
 }
