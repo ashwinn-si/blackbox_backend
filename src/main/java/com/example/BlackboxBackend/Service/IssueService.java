@@ -37,6 +37,7 @@ class IssueDTO {
   private Long id;
   private String title;
   private String content;
+  private String resolution;
   private List<byte[]> images;
   private byte[] audio;
   private Date createdAt;
@@ -51,6 +52,7 @@ class IssueAllDTO {
   private String title;
   private Date createdAt;
   private Date resolvedAt;
+  private IssueStatusEnum status;
 }
 
 @Service
@@ -136,7 +138,7 @@ public class IssueService {
         IssueStatusEnum.CREATED, pageRequest);
     List<IssueAllDTO> issueList = new ArrayList<>();
     for (Issue issue : allIssuesPage.getContent()) {
-      issueList.add(new IssueAllDTO(issue.getId(), issue.getTitle(), issue.getCreatedAt(), null));
+      issueList.add(new IssueAllDTO(issue.getId(), issue.getTitle(), issue.getCreatedAt(), null, null));
     }
 
     return new GetAllDTO(issueList, page, size, allIssuesPage.getTotalPages());
@@ -152,10 +154,10 @@ public class IssueService {
         IssueStatusEnum.RESOLVED, pageRequest);
     List<IssueAllDTO> issueList = new ArrayList<>();
     for (Issue issue : allIssuesPage.getContent()) {
-      issueList.add(new IssueAllDTO(issue.getId(), issue.getTitle(), issue.getCreatedAt(), null));
+      issueList.add(new IssueAllDTO(issue.getId(), issue.getTitle(), issue.getCreatedAt(), issue.getResolvedAt(), issue.getStatus()));
     }
 
-    return new GetAllDTO(allIssuesPage, page, size, allIssuesPage.getTotalPages());
+    return new GetAllDTO(issueList, page, size, allIssuesPage.getTotalPages());
   }
 
   public IssueDTO getIssue(Long issueId) throws CustomError {
@@ -180,6 +182,7 @@ public class IssueService {
     }
     issueDTO.setImages(images);
     issueDTO.setCreatedAt(issue.getCreatedAt());
+    issueDTO.setResolution(issue.getResolution());
     issueDTO.setResolvedAt(issue.getResolvedAt());
     return issueDTO;
   }
@@ -205,7 +208,7 @@ public class IssueService {
     });
     issue.setStatus(issueStatusEnum);
     issue.setResolution(resolutionText);
-    issue.setResolvedAt(new Date(System.currentTimeMillis()));
+    issue.setResolvedAt(Date.valueOf(LocalDate.now()));
     issueRepository.save(issue);
   }
 
